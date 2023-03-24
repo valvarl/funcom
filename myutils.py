@@ -17,14 +17,14 @@ start = 0
 end = 0
 
 def init_tf(gpu, horovod=False):
-    from keras.backend.tensorflow_backend import set_session
+    from keras.backend import set_session
     
-    config = tf.ConfigProto()
-    config = tf.ConfigProto(log_device_placement=False)
+    config = tf.compat.v1.ConfigProto()
+    config = tf.compat.v1.ConfigProto(log_device_placement=False)
     config.gpu_options.allow_growth = True
     config.gpu_options.visible_device_list = gpu
 
-    set_session(tf.Session(config=config))
+    set_session(tf.compat.v1.Session(config=config))
 
 def prep(msg):
     global start
@@ -64,7 +64,7 @@ class batch_gen(keras.utils.Sequence):
         self.batch_size = config['batch_size']
         self.seqdata = seqdata
         self.mt = mt
-        self.allfids = list(seqdata['dt%s' % (tt)].keys())
+        self.allfids = list(seqdata['d%s' % (tt)].keys())
         self.num_inputs = config['num_input']
         self.config = config
         
@@ -83,7 +83,7 @@ class batch_gen(keras.utils.Sequence):
             return None
 
     def __len__(self):
-        return int(np.ceil(len(list(self.seqdata['dt%s' % (self.tt)]))/self.batch_size))
+        return int(np.ceil(len(list(self.seqdata['d%s' % (self.tt)]))/self.batch_size))
 
     def on_epoch_end(self):
         random.shuffle(self.allfids)
@@ -96,13 +96,13 @@ class batch_gen(keras.utils.Sequence):
         comouts = list()
 
         for fid in batchfids:
-            input_datseq = seqdata['dt%s' % (tt)][fid]
+            input_datseq = seqdata['d%s' % (tt)][fid]
             input_comseq = seqdata['c%s' % (tt)][fid]
 
         limit = -1
         c = 0
         for fid in batchfids:
-            wdatseq = seqdata['dt%s' % (tt)][fid]
+            wdatseq = seqdata['d%s' % (tt)][fid]
             wcomseq = seqdata['c%s' % (tt)][fid]
             
             wdatseq = wdatseq[:self.config['tdatlen']]

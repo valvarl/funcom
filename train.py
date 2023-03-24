@@ -15,11 +15,11 @@ import numpy as np
 seed = 1337
 random.seed(seed)
 np.random.seed(seed)
-tf.set_random_seed(seed)
+tf.random.set_seed(seed)
 
 import keras
 import keras.utils
-from keras.backend.tensorflow_backend import set_session
+from keras.backend import set_session
 from keras.callbacks import ModelCheckpoint, LambdaCallback, Callback
 import keras.backend as K
 from model import create_model
@@ -78,8 +78,8 @@ if __name__ == '__main__':
     parser.add_argument('--epochs', dest='epochs', type=int, default=100)
     parser.add_argument('--model-type', dest='modeltype', type=str, default='vanilla')
     parser.add_argument('--with-multigpu', dest='multigpu', action='store_true', default=False)
-    parser.add_argument('--data', dest='dataprep', type=str, default='/scratch/funcom/data/standard')
-    parser.add_argument('--outdir', dest='outdir', type=str, default='/scratch/funcom/data/outdir')
+    parser.add_argument('--data', dest='dataprep', type=str, default='/root/funcom/scratch/funcom/data/standard')
+    parser.add_argument('--outdir', dest='outdir', type=str, default='/root/funcom/scratch/funcom/data/outdir')
     parser.add_argument('--dtype', dest='dtype', type=str, default='float32')
     parser.add_argument('--tf-loglevel', dest='tf_loglevel', type=str, default='3')
     args = parser.parse_args()
@@ -132,7 +132,7 @@ if __name__ == '__main__':
     config['comvocabsize'] = comvocabsize
     config['smlvocabsize'] = smlvocabsize
 
-    config['tdatlen'] = len(list(seqdata['dttrain'].values())[0])
+    config['tdatlen'] = len(list(seqdata['dtrain'].values())[0])
     config['comlen'] = len(list(seqdata['ctrain'].values())[0])
     config['smllen'] = len(list(seqdata['strain'].values())[0])
     
